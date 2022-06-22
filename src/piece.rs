@@ -70,7 +70,7 @@ pub mod pieces {
                     }
                 } else if *offset == self.moveoffsets[1] || *offset == self.moveoffsets[2] {
                     if gamestate.is_tile_taken(self.pos + offset) {
-                        if gamestate.get_piece_color_at_pos(self.pos + offset).unwrap()
+                        if *gamestate.get_piece_color_at_pos(self.pos + offset).unwrap()
                             == self.color
                         {
                             return false;
@@ -165,7 +165,7 @@ pub mod pieces {
                 || self.pos + *offset < gamestate.get_board_size().0 * gamestate.get_board_size().1
             {
                 if gamestate.is_tile_taken(self.pos + offset) {
-                    if gamestate.get_piece_color_at_pos(self.pos + offset).unwrap() == self.color {
+                    if *gamestate.get_piece_color_at_pos(self.pos + offset).unwrap() == self.color {
                         return false;
                     } else {
                         return true;
@@ -259,7 +259,7 @@ pub mod pieces {
                 || self.pos + *offset < gamestate.get_board_size().0 * gamestate.get_board_size().1
             {
                 if gamestate.is_tile_taken(self.pos + offset) {
-                    if gamestate.get_piece_color_at_pos(self.pos + offset).unwrap() == self.color {
+                    if *gamestate.get_piece_color_at_pos(self.pos + offset).unwrap() == self.color {
                         return false;
                     } else {
                         return true;
@@ -337,7 +337,7 @@ pub mod pieces {
                 || self.pos + *offset < gamestate.get_board_size().0 * gamestate.get_board_size().1
             {
                 if gamestate.is_tile_taken(self.pos + offset) {
-                    if gamestate.get_piece_color_at_pos(self.pos + offset).unwrap() == self.color {
+                    if *gamestate.get_piece_color_at_pos(self.pos + offset).unwrap() == self.color {
                         return false;
                     } else {
                         return true;
@@ -381,6 +381,193 @@ pub mod pieces {
                 math::calculate_move_offset(Vec2 { x: 1, y: -2 }),
             ];
             Knight {
+                pos,
+                moveoffsets,
+                color,
+            }
+        }
+    }
+
+    pub struct Queen {
+        pos: i32,
+        moveoffsets: Vec<i32>,
+        color: Color,
+    }
+
+    impl Piece for Queen {
+        fn get_valid_moves(&self, gamestate: &GameState) -> Option<Vec<i32>> {
+            let mut validmoves = Vec::new();
+            for i in &self.moveoffsets {
+                let mut clone = i.clone();
+                let vector = math::calculate_offset_from_move(&clone);
+                loop {
+                    if self.is_valid_move(&clone, gamestate) {
+                        validmoves.push(clone);
+                        if vector.x > 0 {
+                            clone = clone + 1;
+                        } else if vector.x < 0 {
+                            clone = clone - 1;
+                        } else if vector.y > 0 {
+                            clone = clone + gamestate.get_board_size().0;
+                        } else if vector.y < 0 {
+                            clone = clone - gamestate.get_board_size().0;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+            if validmoves.len() > 0 {
+                Some(validmoves)
+            } else {
+                None
+            }
+        }
+
+        fn move_peice(&mut self, offset: i32, gamestate: &GameState) -> Result<(), &'static str> {
+            if self.is_valid_move(&offset, gamestate) {
+                self.pos = self.pos + offset;
+                Ok(())
+            } else {
+                Err("Invalid move!")
+            }
+        }
+
+        fn is_valid_move(&self, offset: &i32, gamestate: &GameState) -> bool {
+            if self.pos + *offset > 0
+                || self.pos + *offset < gamestate.get_board_size().0 * gamestate.get_board_size().1
+            {
+                if gamestate.is_tile_taken(self.pos + offset) {
+                    if *gamestate.get_piece_color_at_pos(self.pos + offset).unwrap() == self.color {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+                true
+            } else {
+                false
+            }
+        }
+
+        fn destroy_peice(&self, gamestate: &mut GameState) {
+            gamestate.remove_piece_from_pos(self.pos);
+        }
+
+        fn get_pos(&self) -> i32 {
+            self.pos
+        }
+
+        fn get_color(&self) -> &Color {
+            &self.color
+        }
+
+        fn new(color: Color, pos: i32) -> Self {
+            //moveoffsets[0] = up left
+            //moveoffsets[1] = up right
+            //moveoffsets[2] = down left
+            //moveoffsets[3] = down right
+            //moveoffsets[4] = up
+            //moveoffsets[5] = down
+            //moveoffsets[6] = left
+            //moveoffsets[7] = right
+            let moveoffsets = vec![
+                math::calculate_move_offset(Vec2 { x: -1, y: -1 }),
+                math::calculate_move_offset(Vec2 { x: 1, y: -1 }),
+                math::calculate_move_offset(Vec2 { x: -1, y: 1 }),
+                math::calculate_move_offset(Vec2 { x: 1, y: 1 }),
+                math::calculate_move_offset(Vec2 { x: 0, y: -1 }),
+                math::calculate_move_offset(Vec2 { x: 0, y: 1 }),
+                math::calculate_move_offset(Vec2 { x: -1, y: 0 }),
+                math::calculate_move_offset(Vec2 { x: 1, y: 0 }),
+            ];
+            Queen {
+                pos,
+                moveoffsets,
+                color,
+            }
+        }
+    }
+
+    pub struct King {
+        pos: i32,
+        moveoffsets: Vec<i32>,
+        color: Color,
+    }
+
+    impl Piece for King {
+        fn get_valid_moves(&self, gamestate: &GameState) -> Option<Vec<i32>> {
+            let mut validmoves = Vec::new();
+            for i in &self.moveoffsets {
+                if self.is_valid_move(i, gamestate) {
+                    validmoves.push(*i);
+                }
+            }
+            if validmoves.len() > 0 {
+                Some(validmoves)
+            } else {
+                None
+            }
+        }
+
+        fn move_peice(&mut self, offset: i32, gamestate: &GameState) -> Result<(), &'static str> {
+            if self.is_valid_move(&offset, gamestate) {
+                self.pos = self.pos + offset;
+                Ok(())
+            } else {
+                Err("Invalid move!")
+            }
+        }
+
+        fn is_valid_move(&self, offset: &i32, gamestate: &GameState) -> bool {
+            if self.pos + *offset > 0
+                || self.pos + *offset < gamestate.get_board_size().0 * gamestate.get_board_size().1
+            {
+                if gamestate.is_tile_taken(self.pos + offset) {
+                    if *gamestate.get_piece_color_at_pos(self.pos + offset).unwrap() == self.color {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+                true
+            } else {
+                false
+            }
+        }
+
+        fn destroy_peice(&self, gamestate: &mut GameState) {
+            gamestate.remove_piece_from_pos(self.pos);
+        }
+
+        fn get_pos(&self) -> i32 {
+            self.pos
+        }
+
+        fn get_color(&self) -> &Color {
+            &self.color
+        }
+
+        fn new(color: Color, pos: i32) -> Self {
+            //moveoffsets[0] = up left
+            //moveoffsets[1] = up right
+            //moveoffsets[2] = down left
+            //moveoffsets[3] = down right
+            //moveoffsets[4] = up
+            //moveoffsets[5] = down
+            //moveoffsets[6] = left
+            //moveoffsets[7] = right
+            let moveoffsets = vec![
+                math::calculate_move_offset(Vec2 { x: -1, y: 1 }),
+                math::calculate_move_offset(Vec2 { x: 1, y: 1 }),
+                math::calculate_move_offset(Vec2 { x: -1, y: -1 }),
+                math::calculate_move_offset(Vec2 { x: 1, y: -1 }),
+                math::calculate_move_offset(Vec2 { x: 0, y: 1 }),
+                math::calculate_move_offset(Vec2 { x: 0, y: -1 }),
+                math::calculate_move_offset(Vec2 { x: -1, y: 0 }),
+                math::calculate_move_offset(Vec2 { x: 1, y: 0 }),
+            ];
+            King {
                 pos,
                 moveoffsets,
                 color,

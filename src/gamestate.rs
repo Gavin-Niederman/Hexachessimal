@@ -45,35 +45,35 @@ impl GameState {
         false
     }
 
-    pub fn get_piece_color_at_pos(&self, pos: i32) -> Result<Color, String> {
+    pub fn get_piece_color_at_pos(&self, pos: i32) -> Result<&Color, String> {
         for piece in &self.board.pawns {
             if piece.get_pos() == pos {
-                return Ok(*piece.get_color());
+                return Ok(piece.get_color());
             }
         }
         for piece in &self.board.rooks {
             if piece.get_pos() == pos {
-                return Ok(*piece.get_color());
+                return Ok(piece.get_color());
             }
         }
         for piece in &self.board.bishops {
             if piece.get_pos() == pos {
-                return Ok(*piece.get_color());
+                return Ok(piece.get_color());
             }
         }
         for piece in &self.board.knights {
             if piece.get_pos() == pos {
-                return Ok(*piece.get_color());
+                return Ok(piece.get_color());
             }
         }
         for piece in &self.board.queens {
             if piece.get_pos() == pos {
-                return Ok(*piece.get_color());
+                return Ok(piece.get_color());
             }
         }
         for piece in &self.board.kings {
             if piece.get_pos() == pos {
-                return Ok(*piece.get_color());
+                return Ok(piece.get_color());
             }
         }
         Err(String::from("No piece at position:") + &pos.to_string())
