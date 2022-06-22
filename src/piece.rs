@@ -558,12 +558,12 @@ pub mod pieces {
             //moveoffsets[6] = left
             //moveoffsets[7] = right
             let moveoffsets = vec![
-                math::calculate_move_offset(Vec2 { x: -1, y: -1 }),
-                math::calculate_move_offset(Vec2 { x: 1, y: -1 }),
                 math::calculate_move_offset(Vec2 { x: -1, y: 1 }),
                 math::calculate_move_offset(Vec2 { x: 1, y: 1 }),
-                math::calculate_move_offset(Vec2 { x: 0, y: -1 }),
+                math::calculate_move_offset(Vec2 { x: -1, y: -1 }),
+                math::calculate_move_offset(Vec2 { x: 1, y: -1 }),
                 math::calculate_move_offset(Vec2 { x: 0, y: 1 }),
+                math::calculate_move_offset(Vec2 { x: 0, y: -1 }),
                 math::calculate_move_offset(Vec2 { x: -1, y: 0 }),
                 math::calculate_move_offset(Vec2 { x: 1, y: 0 }),
             ];
