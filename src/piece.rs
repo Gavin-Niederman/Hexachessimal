@@ -154,6 +154,7 @@ pub mod pieces {
         fn move_peice(&mut self, offset: i32, gamestate: &GameState) -> Result<(), &'static str> {
             if self.is_valid_move(&offset, gamestate) {
                 self.pos = self.pos + offset;
+                self.hasmoved = true;
                 Ok(())
             } else {
                 Err("Invalid move!")
@@ -493,6 +494,7 @@ pub mod pieces {
         pos: i32,
         moveoffsets: Vec<i32>,
         color: Color,
+        hasmoved: bool,
     }
 
     impl Piece for King {
@@ -513,6 +515,7 @@ pub mod pieces {
         fn move_peice(&mut self, offset: i32, gamestate: &GameState) -> Result<(), &'static str> {
             if self.is_valid_move(&offset, gamestate) {
                 self.pos = self.pos + offset;
+                self.hasmoved = true;
                 Ok(())
             } else {
                 Err("Invalid move!")
@@ -571,6 +574,7 @@ pub mod pieces {
                 pos,
                 moveoffsets,
                 color,
+                hasmoved: false,
             }
         }
     }

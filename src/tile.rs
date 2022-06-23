@@ -32,3 +32,52 @@ impl Tile {
         }
     }
 }
+
+impl std::fmt::Display for Tile {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Tile::Pawn(p) => {
+                if *p.get_color() == Color::White {
+                    write!(f, "\x1B[1;97mP\x1B[0m")
+                } else {
+                    write!(f, "\x1B[38;5;238mP\x1B[0m")
+                }
+            },
+            Tile::Rook(r) => {
+                if *r.get_color() == Color::White {
+                    write!(f, "\x1B[1;97mR\x1B[0m")
+                } else {
+                    write!(f, "\x1B[38;5;238mR\x1B[0m")
+                }
+            },
+            Tile::Bishop(b) => {
+                if *b.get_color() == Color::White {
+                    write!(f, "\x1B[1;97mB\x1B[0m")
+                } else {
+                    write!(f, "\x1B[38;5;238mB\x1B[0m")
+                }
+            },
+            Tile::Knight(k) => {
+                if *k.get_color() == Color::White {
+                    write!(f, "\x1B[1;97mN\x1B[0m")
+                } else {
+                    write!(f, "\x1B[38;5;238mN\x1B[0m")
+                }
+            },
+            Tile::Queen(q) => {
+                if *q.get_color() == Color::White {
+                    write!(f, "\x1B[1;97mQ\x1B[0m")
+                } else {
+                    write!(f, "\x1B[38;5;238mQ\x1B[0m")
+                }
+            },
+            Tile::King(k) => {
+                if *k.get_color() == Color::White {
+                    write!(f, "\x1B[1;97mK\x1B[0m")
+                } else {
+                    write!(f, "\x1B[38;5;238mK\x1B[0m")
+                }
+            },
+        }
+    }
+}

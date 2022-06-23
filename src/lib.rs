@@ -4,17 +4,24 @@ mod gamestate;
 mod tile;
 
 pub fn run() {
-
+    let mut gamestate = gamestate::GameState::new(8, 8);
+    println!("{}", gamestate);
 }
 
 #[cfg(test)]
 mod test {
-    use crate::math;
+    use crate::{math, tile::Tile, piece::{pieces::Pawn, Piece, Color}};
 
     #[test]
     fn gen_offsets() {
         let offset = math::calculate_move_offset(math::Vec2{x: -1, y: 2});
         assert_eq!(offset, -17)
+    }
+
+    #[test]
+    fn print_tile() {
+        let tile = Tile::Pawn(Pawn::new(Color::White, 0));
+        println!("{}", tile);
     }
 
     // #[test]
