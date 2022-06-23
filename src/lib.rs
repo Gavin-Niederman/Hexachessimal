@@ -1,7 +1,7 @@
 mod piece;
 mod math;
 mod gamestate;
-mod board;
+mod tile;
 
 pub fn run() {
 
@@ -9,7 +9,7 @@ pub fn run() {
 
 #[cfg(test)]
 mod test {
-    use crate::{math, gamestate::GameState, board::Board, piece::*};
+    use crate::math;
 
     #[test]
     fn gen_offsets() {

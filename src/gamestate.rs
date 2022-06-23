@@ -1,9 +1,9 @@
-use crate::{piece::{Piece, Color}, board::Board};
+use crate::{piece::Color, tile::Tile};
 
 pub struct GameState {
     boardheight: i32,
     boardwidth: i32,
-    board: Board
+    board: Vec<Tile>
 }
 
 impl GameState {
@@ -12,33 +12,8 @@ impl GameState {
     }
 
     pub fn is_tile_taken(&self, pos: i32) -> bool {
-        for piece in &self.board.pawns {
-            if piece.get_pos() == pos {
-                return true;
-            }
-        }
-        for piece in &self.board.rooks {
-            if piece.get_pos() == pos {
-                return true;
-            }
-        }
-        for piece in &self.board.bishops {
-            if piece.get_pos() == pos {
-                return true;
-            }
-        }
-        for piece in &self.board.knights {
-            if piece.get_pos() == pos {
-                return true;
-            }
-        }
-        for piece in &self.board.queens {
-            if piece.get_pos() == pos {
-                return true;
-            }
-        }
-        for piece in &self.board.kings {
-            if piece.get_pos() == pos {
+        for tile in &self.board {
+            if tile.get_pos() == pos {
                 return true;
             }
         }
@@ -46,45 +21,15 @@ impl GameState {
     }
 
     pub fn get_piece_color_at_pos(&self, pos: i32) -> Result<&Color, String> {
-        for piece in &self.board.pawns {
-            if piece.get_pos() == pos {
-                return Ok(piece.get_color());
-            }
-        }
-        for piece in &self.board.rooks {
-            if piece.get_pos() == pos {
-                return Ok(piece.get_color());
-            }
-        }
-        for piece in &self.board.bishops {
-            if piece.get_pos() == pos {
-                return Ok(piece.get_color());
-            }
-        }
-        for piece in &self.board.knights {
-            if piece.get_pos() == pos {
-                return Ok(piece.get_color());
-            }
-        }
-        for piece in &self.board.queens {
-            if piece.get_pos() == pos {
-                return Ok(piece.get_color());
-            }
-        }
-        for piece in &self.board.kings {
-            if piece.get_pos() == pos {
-                return Ok(piece.get_color());
+        for tile in &self.board {
+            if tile.get_pos() == pos {
+                return Ok(tile.get_color());
             }
         }
         Err(String::from("No piece at position:") + &pos.to_string())
     }
 
     pub fn remove_piece_from_pos(&mut self, pos: i32) {
-        self.board.pawns.retain(|p| p.get_pos() != pos);
-        self.board.rooks.retain(|p| p.get_pos() != pos);
-        self.board.bishops.retain(|p| p.get_pos() != pos);
-        self.board.knights.retain(|p| p.get_pos() != pos);
-        self.board.queens.retain(|p| p.get_pos() != pos);
-        self.board.kings.retain(|p| p.get_pos() != pos);
+        self.board.retain(|p| p.get_pos() != pos);
     }
 }
