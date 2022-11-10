@@ -1,3 +1,3 @@
 fn main() {
-    hexachessimal::run();
+    println!("Hello, world!");
 }
